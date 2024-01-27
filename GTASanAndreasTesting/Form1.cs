@@ -157,7 +157,7 @@ namespace GTASanAndreasTesting
             }
             else
             {
-                MessageBox.Show("File not found.");
+                MessageBox.Show("No locations to load.");
             }
         }
 
@@ -301,7 +301,10 @@ namespace GTASanAndreasTesting
 
         private void button3_Click(object sender, EventArgs e)
         {
-            SaveCoords(textBox4.Text, float.Parse(textBox1.Text), float.Parse(textBox2.Text), float.Parse(textBox3.Text));
+            if (textBox4.Text != "" && textBox1.Text != "" && textBox2.Text != "" && textBox3.Text != "")
+                SaveCoords(textBox4.Text, float.Parse(textBox1.Text), float.Parse(textBox2.Text), float.Parse(textBox3.Text));
+            else
+                MessageBox.Show("Please fill all the fields!");
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -313,6 +316,31 @@ namespace GTASanAndreasTesting
         private void Form1_Load(object sender, EventArgs e)
         {
             LoadLocationNames();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            LoadLocationNames();
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string locationNameToLoad = comboBox1.SelectedItem.ToString();
+            LoadCoordinates(locationNameToLoad);
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                xbdbg.WriteFloat(TP_ADDRESS, float.Parse(textBox1.Text));
+                xbdbg.WriteFloat(TP_ADDRESS + 0x4, float.Parse(textBox2.Text));
+                xbdbg.WriteFloat(TP_ADDRESS + 0x8, float.Parse(textBox3.Text));
+            }
+            catch
+            {
+                MessageBox.Show("Failed to teleport to position!");
+            }
         }
     }
 }

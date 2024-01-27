@@ -230,6 +230,7 @@
             this.comboBox1.Size = new System.Drawing.Size(316, 21);
             this.comboBox1.TabIndex = 7;
             this.comboBox1.Text = "Select a location....";
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // label5
             // 
@@ -248,6 +249,7 @@
             this.button5.TabIndex = 9;
             this.button5.Text = "Refresh Saved List";
             this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // button6
             // 
@@ -257,6 +259,7 @@
             this.button6.TabIndex = 10;
             this.button6.Text = "Teleport To Selection";
             this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // Form1
             // 
@@ -266,6 +269,7 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "GTA San Andreas Testing";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
