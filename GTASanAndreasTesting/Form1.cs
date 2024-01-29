@@ -16,7 +16,9 @@ namespace GTASanAndreasTesting
     public partial class Form1 : Form
     {
         bool dbgConnection = false;
+        bool oneHitKill = false;
         public uint TP_ADDRESS = 0;
+        public uint HEALTH_ADDRESS = 0;
 
         public IXboxManager xbm;
         public XboxConsole xbdbg;
@@ -342,6 +344,39 @@ namespace GTASanAndreasTesting
             catch
             {
                 MessageBox.Show("Failed to teleport to position!");
+            }
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dbgConnection)
+                {
+                    uint entry = 0x822FD778;
+                    uint freeMemAddr = 0x83070050;
+                    uint entryHook = 0x48D728D8; // this branches to free memory where the new custom function will be written
+                    byte[] hook = new byte[] { 0x2C, 0x08, 0x00, 0x31, 0x41, 0x82, 0x00, 0x08, 0x4B, 0x28, 0xD7, 0x28, 0x4B, 0x28, 0xD7, 0x30 };
+                    if (!oneHitKill)
+                    {
+                        xbdbg.WriteUInt32(entry, entryHook);
+                        xbdbg.SetMemory(freeMemAddr, hook);
+                        oneHitKill = true;
+                    }
+                    else
+                    {
+                        xbdbg.WriteUInt32(entry, 0x2B0A0000);
+                        oneHitKill = false;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Debug Monitor not connected!");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
     }
