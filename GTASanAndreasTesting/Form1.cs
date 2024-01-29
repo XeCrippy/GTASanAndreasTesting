@@ -208,8 +208,10 @@ namespace GTASanAndreasTesting
                                 EventInfo.Info.Thread.TopOfStack.GetRegister64(XboxRegisters64.r26, out long r26);
                                 EventInfo.Info.Thread.TopOfStack.GetRegister64(XboxRegisters64.r30, out long r30);
                                 EventInfo.Info.Thread.TopOfStack.GetRegister64(XboxRegisters64.r11, out long r11);
+                                float x_visual = xbdbg.ReadFloat(0x82C69B84);
+                                float x = xbdbg.ReadFloat((uint)r11 + 0x30);
 
-                                if (r26 == 0x2 && r30 == 0x1)
+                                if (r26 == 0x2 && r30 == 0x1 && x == x_visual)
                                 {
                                     Invoke(new Action(() =>
                                     {
