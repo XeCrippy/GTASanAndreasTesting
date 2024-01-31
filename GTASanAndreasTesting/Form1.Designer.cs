@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button8 = new System.Windows.Forms.Button();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
@@ -37,8 +38,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.button6 = new System.Windows.Forms.Button();
@@ -51,12 +50,16 @@
             this.button3 = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.button7 = new System.Windows.Forms.Button();
+            this.timer2 = new System.Windows.Forms.Timer(this.components);
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.button8);
             this.groupBox1.Controls.Add(this.textBox3);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.textBox2);
@@ -64,19 +67,27 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.textBox1);
             this.groupBox1.Controls.Add(this.checkBox1);
-            this.groupBox1.Controls.Add(this.richTextBox1);
-            this.groupBox1.Controls.Add(this.button2);
             this.groupBox1.Controls.Add(this.button1);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(328, 276);
+            this.groupBox1.Size = new System.Drawing.Size(328, 134);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Teleport";
             // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(6, 48);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(316, 23);
+            this.button8.TabIndex = 12;
+            this.button8.Text = "Inject Teleport Hook";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(240, 242);
+            this.textBox3.Location = new System.Drawing.Point(240, 100);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(82, 20);
             this.textBox3.TabIndex = 9;
@@ -85,7 +96,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(219, 245);
+            this.label3.Location = new System.Drawing.Point(219, 103);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(15, 13);
             this.label3.TabIndex = 8;
@@ -93,7 +104,7 @@
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(133, 242);
+            this.textBox2.Location = new System.Drawing.Point(133, 100);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(82, 20);
             this.textBox2.TabIndex = 7;
@@ -102,7 +113,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(112, 245);
+            this.label2.Location = new System.Drawing.Point(112, 103);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(15, 13);
             this.label2.TabIndex = 6;
@@ -111,7 +122,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 245);
+            this.label1.Location = new System.Drawing.Point(3, 104);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(15, 13);
             this.label1.TabIndex = 5;
@@ -119,7 +130,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(24, 242);
+            this.textBox1.Location = new System.Drawing.Point(24, 100);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(82, 20);
             this.textBox1.TabIndex = 4;
@@ -128,31 +139,13 @@
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(6, 219);
+            this.checkBox1.Location = new System.Drawing.Point(9, 77);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(161, 17);
             this.checkBox1.TabIndex = 3;
             this.checkBox1.Text = "Continuously update position";
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // richTextBox1
-            // 
-            this.richTextBox1.Location = new System.Drawing.Point(6, 77);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(316, 136);
-            this.richTextBox1.TabIndex = 2;
-            this.richTextBox1.Text = "";
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(6, 48);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(316, 23);
-            this.button2.TabIndex = 1;
-            this.button2.Text = "Retrieve Addresses";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button1
             // 
@@ -174,7 +167,7 @@
             this.groupBox2.Controls.Add(this.textBox4);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.button3);
-            this.groupBox2.Location = new System.Drawing.Point(12, 294);
+            this.groupBox2.Location = new System.Drawing.Point(12, 152);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(328, 164);
             this.groupBox2.TabIndex = 10;
@@ -264,20 +257,34 @@
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(408, 87);
+            this.button7.Location = new System.Drawing.Point(6, 19);
             this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(152, 23);
+            this.button7.Size = new System.Drawing.Size(316, 23);
             this.button7.TabIndex = 11;
             this.button7.Text = "God Mode/OHK Test";
             this.button7.UseVisualStyleBackColor = true;
             this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
+            // timer2
+            // 
+            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.button7);
+            this.groupBox3.Location = new System.Drawing.Point(12, 322);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(328, 60);
+            this.groupBox3.TabIndex = 12;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "groupBox3";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(630, 472);
-            this.Controls.Add(this.button7);
+            this.ClientSize = new System.Drawing.Size(355, 396);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "Form1";
@@ -289,6 +296,7 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -299,8 +307,6 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.RichTextBox richTextBox1;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBox2;
@@ -317,6 +323,9 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Timer timer2;
+        private System.Windows.Forms.GroupBox groupBox3;
     }
 }
 
