@@ -52,6 +52,11 @@
             this.button7 = new System.Windows.Forms.Button();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.button12 = new System.Windows.Forms.Button();
+            this.button11 = new System.Windows.Forms.Button();
+            this.button10 = new System.Windows.Forms.Button();
+            this.button9 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -259,31 +264,82 @@
             // 
             this.button7.Location = new System.Drawing.Point(6, 19);
             this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(316, 23);
+            this.button7.Size = new System.Drawing.Size(153, 23);
             this.button7.TabIndex = 11;
             this.button7.Text = "God Mode/OHK Test";
             this.button7.UseVisualStyleBackColor = true;
             this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
-            // timer2
-            // 
-            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
-            // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.button12);
+            this.groupBox3.Controls.Add(this.button11);
+            this.groupBox3.Controls.Add(this.button10);
+            this.groupBox3.Controls.Add(this.button9);
+            this.groupBox3.Controls.Add(this.button2);
             this.groupBox3.Controls.Add(this.button7);
             this.groupBox3.Location = new System.Drawing.Point(12, 322);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(328, 60);
+            this.groupBox3.Size = new System.Drawing.Size(328, 113);
             this.groupBox3.TabIndex = 12;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "groupBox3";
+            this.groupBox3.Text = "Cheats";
+            // 
+            // button12
+            // 
+            this.button12.Location = new System.Drawing.Point(165, 77);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(153, 23);
+            this.button12.TabIndex = 16;
+            this.button12.Text = "Some random unlocks";
+            this.button12.UseVisualStyleBackColor = true;
+            this.button12.Click += new System.EventHandler(this.button12_Click);
+            // 
+            // button11
+            // 
+            this.button11.Location = new System.Drawing.Point(6, 48);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(153, 23);
+            this.button11.TabIndex = 15;
+            this.button11.Text = "Max Attributes";
+            this.button11.UseVisualStyleBackColor = true;
+            this.button11.Click += new System.EventHandler(this.button11_Click);
+            // 
+            // button10
+            // 
+            this.button10.Location = new System.Drawing.Point(6, 77);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(153, 23);
+            this.button10.TabIndex = 14;
+            this.button10.Text = "Max Weapon Skills";
+            this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.button10_Click);
+            // 
+            // button9
+            // 
+            this.button9.Location = new System.Drawing.Point(165, 48);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(153, 23);
+            this.button9.TabIndex = 13;
+            this.button9.Text = "Max Money";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(165, 19);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(153, 23);
+            this.button2.TabIndex = 12;
+            this.button2.Text = "Infinite Ammo";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(355, 396);
+            this.ClientSize = new System.Drawing.Size(358, 447);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -326,6 +382,11 @@
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Button button11;
+        private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button12;
     }
 }
 

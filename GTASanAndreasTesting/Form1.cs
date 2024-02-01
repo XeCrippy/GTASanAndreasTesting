@@ -12,27 +12,73 @@ namespace GTASanAndreasTesting
 {
     public partial class Form1 : Form
     {
-        bool dbgConnection = false;
+        bool connection = false;
+        bool infAmmo = false;
         bool oneHitKill = false;
+        bool tpHook = false;
         public uint TP_ADDRESS = 0;
         public uint HEALTH_ADDRESS = 0;
 
-        public IXboxManager xbm;
-        public XboxConsole xbdbg;
+        private uint ammo1 = 0x82629E38;
+        private uint ammo2 = 0x82629DE8;
+        private uint ammo_off = 0x396BFFFF;
+        private uint ammo_on = 0x396B0000;
+        private uint money1 = 0x82F31608;
+        private uint money2 = 0x82F3160C;
+        private uint vehicleAmmo = 0x826267C0;
 
-        private bool DbgConnect()
+        private const uint fat = 0x82F2B88C;//tu0=0x82F2B80C;
+        private uint stamina = fat + 0x4;
+        private uint muscle = fat + 0x8;
+        private uint respect1 = fat + 0xAC;
+        private uint respect2 = fat + 0xBC;
+        private uint sex_appeal = fat + 0xEC;
+        private uint driving_skill = fat - 0x334;
+
+        private const uint pistolSkill = 0x82F2B94C;//tu0=0x82F2B8CC; //823CB3F0
+        private uint silencedPistolSkill = pistolSkill + 0x4;
+        private uint desertEagleSkill = pistolSkill + 0x8;
+        private uint shotgunSkill = pistolSkill + 0xC;
+        private uint sawnOffShotgunSkill = pistolSkill + 0x10;
+        private uint combatShotgunSkill = pistolSkill + 0x14;
+        private uint machinePistolSkill = pistolSkill + 0x18;
+        private uint smgSkill = pistolSkill + 0x1C;
+        private uint ak47Skill = pistolSkill + 0x20;
+        private uint m4Skill = pistolSkill + 0x24;
+        private uint rifleSkill = pistolSkill + 0x28;
+
+        private const uint bulletsFired = 0x82F2B4D0;//tu0=0x82F2B450;
+        private uint kgsOfExplosivesUsed = bulletsFired + 0x4;
+        private uint bulletsThatHit = bulletsFired + 0x8;
+        private uint hospitalVisits = bulletsFired + 0x24;
+
+        private uint peopleKilled = 0x82F2B4BC;//tu0=0x82F2B43C; // 4000 = The Los Santos Slayer 20G
+        private uint passangersDroppedOff = 0x82F2B4B0; // 50 = Yes I Speak English
+        private uint sexAppeal = 0x82F2B978;//tu0=0x82F2B8F8; // 9999 = Chick magnet 100G
+        private uint respect = 0x82F2B948;//tu0=0x82F2B8C8; // 9999 = Original Gangster 100G
+        private uint timesBusted = 0x82F2B4EC;//tu0=0x82F2B46C; // 49 + 1 = Serial Offender 20G
+        private uint taxiFares = 0x82D8C8B0;//tu0=0x82D8C830; // set to 50 while on taxi mission = Yes I Speak English 30G
+
+        IXboxConsole xbox;
+
+        private bool Connect()
         {
             try
             {
-                xbm = new XboxManager();
-                xbdbg = xbm.OpenConsole(xbm.DefaultConsole);
-                xbdbg.OpenConnection(null);
-                dbgConnection = true;
-                return true;
+                if (xbox.Connect(out xbox))
+                {
+                    connection = true;
+                    return true;
+                }
+                else
+                {
+                    connection = false;
+                    return false;
+                }
             }
             catch
             {
-                dbgConnection = false;
+                connection = false;
                 return false;
             }
         }
@@ -169,13 +215,13 @@ namespace GTASanAndreasTesting
         {
             try
             {
-                if (DbgConnect())
+                if (Connect())
                 {
-                    MessageBox.Show("Connected to Debug Monitor!");
+                    MessageBox.Show("Connected to: " + xbox.Name);
                 }
                 else
                 {
-                    MessageBox.Show("Failed to connect to Debug Monitor!");
+                    MessageBox.Show("Failed to connect to default console");
                 }
             }
             catch (Exception ex)
@@ -188,11 +234,11 @@ namespace GTASanAndreasTesting
         {
             try
             {
-                if (dbgConnection && TP_ADDRESS != 0 && checkBox1.Checked)
+                if (connection && TP_ADDRESS != 0 && checkBox1.Checked)
                 {
-                    float pos_x = xbdbg.ReadFloat(TP_ADDRESS);
-                    float pos_y = xbdbg.ReadFloat(TP_ADDRESS + 0x4);
-                    float pos_z = xbdbg.ReadFloat(TP_ADDRESS + 0x8);
+                    float pos_x = xbox.ReadFloat(TP_ADDRESS);
+                    float pos_y = xbox.ReadFloat(TP_ADDRESS + 0x4);
+                    float pos_z = xbox.ReadFloat(TP_ADDRESS + 0x8);
                     textBox1.Text = pos_x.ToString();
                     textBox2.Text = pos_y.ToString();
                     textBox3.Text = pos_z.ToString();
@@ -221,10 +267,10 @@ namespace GTASanAndreasTesting
         {
             try
             {
-                if (dbgConnection)
+                if (connection)
                 {
-                    xbdbg.DebugTarget.RemoveAllBreakpoints();
-                    xbdbg.DebugTarget.DisconnectAsDebugger();
+                    xbox.DebugTarget.RemoveAllBreakpoints();
+                    xbox.DebugTarget.DisconnectAsDebugger();
                 }
             }
             catch { }
@@ -264,13 +310,15 @@ namespace GTASanAndreasTesting
         {
             try
             {
-                if (dbgConnection)
+                if (connection)
                 {
+                    TP_ADDRESS = xbox.ReadUInt32(0x83070100) + 0x30; // get the address of the float coordinates
+
                     if (TP_ADDRESS != 0)
                     {
-                        xbdbg.WriteFloat(TP_ADDRESS, float.Parse(textBox1.Text)); 
-                        xbdbg.WriteFloat(TP_ADDRESS + 0x4, float.Parse(textBox2.Text)); 
-                        xbdbg.WriteFloat(TP_ADDRESS + 0x8, float.Parse(textBox3.Text));
+                        xbox.WriteFloat(TP_ADDRESS, float.Parse(textBox1.Text));
+                        xbox.WriteFloat(TP_ADDRESS + 0x4, float.Parse(textBox2.Text));
+                        xbox.WriteFloat(TP_ADDRESS + 0x8, float.Parse(textBox3.Text));
                     }
                     else
                     {
@@ -279,7 +327,7 @@ namespace GTASanAndreasTesting
                 }
                 else
                 {
-                    MessageBox.Show("Debug Monitor not connected!");
+                    MessageBox.Show("You are not connected to your console");
                 }
             }
             catch
@@ -292,27 +340,36 @@ namespace GTASanAndreasTesting
         {
             try
             {
-                if (dbgConnection)
+                if (connection)
                 {
-                    uint entry = 0x822FD778; // this is the breakpoint address for the function that handles damage
-                    uint freeMemAddr = 0x83070050; // this is just a random address in free memory that seems to be 0 all the time
-                    uint entryHook = 0x48D728D8; // this branches to free memory where the new custom function will be written
-                    byte[] hook = new byte[] { 0x2C, 0x08, 0x00, 0x31, 0x41, 0x82, 0x00, 0x08, 0x4B, 0x28, 0xD7, 0x28, 0x4B, 0x28, 0xD7, 0x30 }; // this is the new custom function that will be written to free memory
+                    uint entry = 0x822FE5C4; // this is the breakpoint address for the function that handles damage
+                    uint freeMemAddr = 0x83070044; // this is just a random address in free memory that seems to be 0 all the time
+                    uint entryHook = 0x48D71A80; // this branches to free memory where the new custom function will be written
+                    string hex = "2C0800312C090042418200182C0800692C0900074182000CEDAD68284B28E568600000004B28E560";
+                    string hex2 = "2C0800312C0900424182001C2C080069418200142C0800314182000CEDAD68284B28E4B4600000004B28E4AC";
+                    byte[] hook = hexStringToByteArray(hex); // this is the new custom function that will be written to free memory
+                    byte[] hook2 = hexStringToByteArray(hex2);
                     if (!oneHitKill)
                     {
-                        xbdbg.WriteUInt32(entry, entryHook);
-                        xbdbg.SetMemory(freeMemAddr, hook);
+                        xbox.WriteUInt32(entry, entryHook);
+                        xbox.SetMemory(freeMemAddr, hook);
+
+                        xbox.WriteUInt32(0x822FE540, 0x48D71B30); // inject the code to branch to the new custom function when executed
+                        xbox.SetMemory(0x83070070, hook2);
                         oneHitKill = true;
                     }
                     else
                     {
-                        xbdbg.WriteUInt32(entry, 0x2B0A0000);
+                        byte[] clear = new byte[hook.Length + hook2.Length]; // clear the memory that was written to with the custom function
+                        xbox.WriteUInt32(entry, 0xEDAD6028); // restore the original function
+                        xbox.WriteUInt32(0x822FE540, 0xD01F0540); // restore the original function
+                        xbox.SetMemory(freeMemAddr, clear); // clear the memory that was written to with the custom function
                         oneHitKill = false;
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Debug Monitor not connected!");
+                    MessageBox.Show("You are not connected to your console");
                 }
             }
             catch (Exception ex)
@@ -332,42 +389,27 @@ namespace GTASanAndreasTesting
         {
             try
             {
-                if (dbgConnection)
+                if (connection)
                 {
-                    // the function compares registers to find the correct address, then writes the address to free memory for external use
-                    /*
-                     * cmpwi %r26, 0x2 
-   bne not_equal_r26
-
-   cmpwi %r30, 0x1
-   bne not_equal_r26
-   
-   lis %r6, 0x4187
-   ori %r6, %r6, 0x0060
-   cmpw %r6, %r31
-   bne not_equal_r26
-
-   bl custom_function
-
-   custom_function:
-   mr %r3, %r11
-   lis %r14, 0x8307
-   ori %r15, %r14, 0x0114
-   stw %r3, 0(%r15)
-   stfs %f6, 0x30(%r11)
-   b (StorePosition - 0x34) - FreeMemory
-   
-   not_equal_r26:
-   stfs %f6, 0x30(%r11)
-   b (StorePosition - 0x3C) - FreeMemory
-                     */
-
-                    // the third check has not been fully tested so i'm not sure if that value will be dynamic after rebooting 
-                    string hex = "2C1A0002408200382C1E0001408200303CC0418760C600607C06F80040820020480000057D635B783DC0830761CF0114906F0000D0CB00304B335414D0CB00304B33540C"; // new ppc function we will hook. loads the addresses into free memory for external comparison and retrieval 
+                    string hex = "2C1A0002408200342C1E00014082002C3DE0800061EF00007C0F38004082001C480000053DC0830761CE0100916E0000D0CB00304B3364D4D0CB00304B3364CC"; // new ppc function we will hook. loads the addresses into free memory for external comparison and retrieval 
                     byte[] bytes = hexStringToByteArray(hex); // convert the hex string to byte array. / seemed quicker than formatting manually
-                    xbdbg.WriteUInt32(0x823A54AC, 0x48CCABB8); // inject the code to branch to the new custom function when executed
-                    xbdbg.SetMemory(0x83070064, bytes); // inject the custom ppc function into free memory / i have no idea where the games actual free mem is so this is just an area that seems to be 0 all the time
-                    timer2.Start(); // start timer to loop through the addresses, comparing the values to the visual representation of your coordinates, when found it will stop and store the address
+                    if (!tpHook)
+                    {
+                        xbox.WriteUInt32(0x823A6504, 0x48CC9AFC); // inject the code to branch to the new custom function when executed
+                        xbox.SetMemory(0x83070000, bytes); // inject the custom ppc function into free memory / i have no idea where the games actual free mem is so this is just an area that seems to be 0 all the time
+                        tpHook = true;
+                    }
+                    else
+                    {
+                        byte[] clear = new byte[bytes.Length]; // clear the memory that was written to with the custom function
+                        xbox.WriteUInt32(0x823A6504, 0xD0CB0030); // restore the original function
+                        xbox.SetMemory(0x83070000, clear); // clear the memory that was written to with the custom function
+                        tpHook = false;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("You are not connected to your console");
                 }
             }
             catch (Exception ex)
@@ -376,34 +418,132 @@ namespace GTASanAndreasTesting
             }
         }
 
-        private void timer2_Tick(object sender, EventArgs e)
+        private void button2_Click(object sender, EventArgs e)
         {
             try
             {
-                if (dbgConnection)
+                if (connection)
                 {
-                    uint custFunc = 0x83070114; // address in free memory where the custom function will store the address
-                    uint visualaddr = 0x82C69B84; // static address for float coordinates used for comparing 
-                    uint check1addr = xbdbg.ReadUInt32(custFunc) + 0x30; // get the value stored in free memory and add 0x30 to get the address of the float coordinates
-                    float check1 = xbdbg.ReadFloat(check1addr); // read the float coordinates
-                    float check2 = xbdbg.ReadFloat(visualaddr); // read the static float coordinates
-
-                    if (check1 == check2) // if the coordinates are the same, then we have found the address
+                    if (!infAmmo)
                     {
-                        TP_ADDRESS = check1addr; // set the address to the address of the float coordinates
-                        timer2.Stop(); // stop the timer
+                        xbox.WriteUInt32(ammo1, ammo_on);
+                        xbox.WriteUInt32(ammo2, ammo_on);
+                        xbox.WriteUInt32(vehicleAmmo, ammo_on);
+                        infAmmo = true;
+                    }
+                    else
+                    {
+                        xbox.WriteUInt32(ammo1, ammo_off);
+                        xbox.WriteUInt32(ammo2, ammo_off);
+                        xbox.WriteUInt32(vehicleAmmo, ammo_off);
+                        infAmmo = false;
                     }
                 }
                 else
                 {
-                    timer2.Stop();
-                    MessageBox.Show("Debug Monitor not connected!");
+                    MessageBox.Show("You are not connected to your console");
                 }
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
-                timer2.Stop();
-                MessageBox.Show($"{ex.Message}");
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (connection)
+                {
+                    xbox.WriteFloat(fat, 0);
+                    xbox.WriteFloat(stamina, 1000);
+                    xbox.WriteFloat(muscle, 1000);
+                    xbox.WriteFloat(respect1, 1000);
+                    xbox.WriteFloat(respect2, 1000);
+                    xbox.WriteFloat(sex_appeal, 1000);
+                    xbox.WriteFloat(driving_skill, 1000);
+                }
+                else
+                {
+                    MessageBox.Show("You are not connected to your console");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (connection)
+                {
+                    xbox.WriteUInt32(money1, 999999999);
+                    xbox.WriteUInt32(money2, 999999999);
+                }
+                else
+                {
+                    MessageBox.Show("You are not connected to your console");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (connection)
+                {
+                    xbox.WriteFloat(pistolSkill, 999f);
+                    xbox.WriteFloat(silencedPistolSkill, 999f);
+                    xbox.WriteFloat(desertEagleSkill, 999f);
+                    xbox.WriteFloat(shotgunSkill, 999f);
+                    xbox.WriteFloat(sawnOffShotgunSkill, 999f);
+                    xbox.WriteFloat(combatShotgunSkill, 999f);
+                    xbox.WriteFloat(machinePistolSkill, 999f);
+                    xbox.WriteFloat(smgSkill, 999f);
+                    xbox.WriteFloat(ak47Skill, 999f);
+                    xbox.WriteFloat(m4Skill, 999f);
+                    xbox.WriteFloat(rifleSkill, 999f);
+                }
+                else
+                {
+                    MessageBox.Show("You are not connected to your console");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (connection)
+                {
+                    xbox.WriteUInt32(peopleKilled, 40000u);
+                    xbox.WriteFloat(sexAppeal, 2000f);
+                    xbox.WriteFloat(respect, 2000f);
+                    xbox.WriteUInt32(timesBusted, 49u);
+                    xbox.WriteUInt32(taxiFares, 49u);
+                }
+                else
+                {
+                    MessageBox.Show("You are not connected to your console");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
     }
