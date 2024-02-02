@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
 using XDevkit; // XBOX 360 SDK
 
@@ -342,28 +341,34 @@ namespace GTASanAndreasTesting
             {
                 if (connection)
                 {
-                    uint entry = 0x822FE5C4; // this is the breakpoint address for the function that handles damage
-                    uint freeMemAddr = 0x83070044; // this is just a random address in free memory that seems to be 0 all the time
-                    uint entryHook = 0x48D71A80; // this branches to free memory where the new custom function will be written
-                    string hex = "2C0800312C090042418200182C0800692C0900074182000CEDAD68284B28E568600000004B28E560";
-                    string hex2 = "2C0800312C0900424182001C2C080069418200142C0800314182000CEDAD68284B28E4B4600000004B28E4AC";
-                    byte[] hook = hexStringToByteArray(hex); // this is the new custom function that will be written to free memory
-                    byte[] hook2 = hexStringToByteArray(hex2);
+                    //uint entry = 0x822FE5C4; // this is the breakpoint address for the function that handles damage
+                    uint freeMemAddr1 = 0x83070044; // this is just a random address in free memory that seems to be 0 all the time
+                    uint entryHook1 = 0x48D71A80; // this branches to free memory where the new custom function will be written
+                    uint entry1 = 0x822FE5C4;
+
+                    uint entry2 = 0x822FE540; // this is the breakpoint address for the function that handles damage
+                    uint freeMemAddr2 = 0x83070080; // this is just a random address in free memory that seems to be 0 all the time
+                    uint entryHook2 = 0x48D71B40; // this branches to free memory where the new custom function will be written
+                    uint exitBytes2 = 0xD01F0540; // this is the original function that will be restored when the custom function is no longer needed
+                    string hex2 = "2C0800312C090042418200282C080069418200202C080031418200182C08000A41820010D01F0540EFFFF8284B28E49C60000000600000004B28E494";
+                    string hex1 = "2C0800312C090042418200242C0800694182001C2C080031418200142C08000A4182000CEDAD68284B28E55C60000000600000004B28E554";
+                    byte[] hook2 = hexStringToByteArray(hex2); // this is the new custom function that will be written to free memory
+                    byte[] hook1 = hexStringToByteArray(hex1);
                     if (!oneHitKill)
                     {
-                        xbox.WriteUInt32(entry, entryHook);
-                        xbox.SetMemory(freeMemAddr, hook);
+                        xbox.SetMemory(freeMemAddr2, hook2);
+                        xbox.WriteUInt32(entry2, entryHook2); // inject the code to branch to the new custom function when executed
 
-                        xbox.WriteUInt32(0x822FE540, 0x48D71B30); // inject the code to branch to the new custom function when executed
-                        xbox.SetMemory(0x83070070, hook2);
+                        xbox.SetMemory(freeMemAddr1, hook1);
+                        xbox.WriteUInt32(entry1, entryHook1); // inject the code to branch to the new custom function when executed
                         oneHitKill = true;
                     }
                     else
                     {
-                        byte[] clear = new byte[hook.Length + hook2.Length]; // clear the memory that was written to with the custom function
-                        xbox.WriteUInt32(entry, 0xEDAD6028); // restore the original function
-                        xbox.WriteUInt32(0x822FE540, 0xD01F0540); // restore the original function
-                        xbox.SetMemory(freeMemAddr, clear); // clear the memory that was written to with the custom function
+                        byte[] clear = new byte[(hook1.Length + hook2.Length) + 0x8]; // clear the memory that was written to with the custom function
+                        xbox.WriteUInt32(entry1, 0xEDAD6028); // restore the original function
+                        xbox.WriteUInt32(entry2, exitBytes2); // restore the original function
+                        xbox.SetMemory(freeMemAddr1, clear); // clear the memory that was written to with the custom function
                         oneHitKill = false;
                     }
                 }
